@@ -1,0 +1,166 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yt2spot"
+version = "0.1.0"
+description = "Migrate YouTube Music liked songs to Spotify playlists with intelligent matching"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Tyrone Marhguy", email = "your-email@example.com"}
+]
+keywords = ["spotify", "youtube-music", "playlist", "migration", "music"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "spotipy>=2.23.0",          # Spotify Web API wrapper
+    "rapidfuzz>=3.5.0",         # Fast fuzzy string matching
+    "tqdm>=4.66.0",             # Progress bars
+    "click>=8.1.0",             # CLI framework (better than argparse)
+    "tomli>=2.0.0; python_version<'3.11'",  # TOML parsing for older Python
+    "tomli-w>=1.0.0",          # TOML writing (note: tomli-w not tomllib-w)
+    "rich>=13.7.0",             # Rich terminal output and logging
+    "pydantic>=2.5.0",          # Data validation and settings management
+    "typing-extensions>=4.8.0", # Type hints for older Python versions
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "mypy>=1.8.0",
+    "ruff>=0.1.0",
+    "black>=23.0.0",
+    "pre-commit>=3.6.0",
+    "responses>=0.24.0",        # Mock HTTP requests for testing
+    "freezegun>=1.2.0",         # Mock datetime for testing
+]
+
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "responses>=0.24.0",
+    "freezegun>=1.2.0",
+]
+
+[project.scripts]
+yt2spot = "yt2spot.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/tyronemarhguy/yt2spot"
+Repository = "https://github.com/tyronemarhguy/yt2spot"
+Issues = "https://github.com/tyronemarhguy/yt2spot/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["yt2spot*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["B011"]
+
+[tool.black]
+target-version = ['py310']
+line-length = 88
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = "spotipy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["yt2spot"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "yt2spot/version.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
