@@ -187,12 +187,139 @@ def migrate(
 
         # TODO: Import and run the main pipeline
         # This will be implemented in the next sprint
-        console.print(
-            "[yellow]🚧 Core pipeline implementation coming in Sprint 1![/yellow]"
+        from yt2spot.input_parser import parse_input_file
+        from yt2spot.matcher.decision import get_decision_summary, make_decision
+        from yt2spot.matcher.scoring import score_candidates
+        from yt2spot.matcher.search import search_spotify_tracks
+        from yt2spot.spotify_client import SpotifyClient
+
+        # Load and validate environment variables
+        try:
+            from dotenv import load_dotenv
+
+            load_dotenv()
+        except ImportError:
+            # python-dotenv not installed, skip loading .env file
+            pass
+
+        # Parse input file
+        console.print(f"[cyan]📁 Parsing input file:[/cyan] {input_path}")
+        songs = parse_input_file(input_path)
+
+        if not songs:
+            console.print("[red]❌ No songs found in input file[/red]")
+            return
+
+        # Apply limit if specified
+        if limit and limit > 0:
+            songs = songs[:limit]
+            console.print(f"[yellow]⚠️  Limited to first {limit} songs[/yellow]")
+
+        # Initialize Spotify client
+        console.print("[cyan]🔐 Authenticating with Spotify...[/cyan]")
+        spotify_client = SpotifyClient(session_config)
+
+        if not spotify_client.authenticate():
+            console.print("[red]❌ Failed to authenticate with Spotify[/red]")
+            return
+
+        # Process songs
+        console.print(f"[cyan]🎵 Processing {len(songs)} songs...[/cyan]")
+        decisions = []
+        liked_count = 0
+
+        from rich.progress import (
+            BarColumn,
+            Progress,
+            SpinnerColumn,
+            TaskProgressColumn,
+            TextColumn,
         )
-        console.print(f"[dim]Would process: {input_path}[/dim]")
-        console.print(f"[dim]Target playlist: {playlist}[/dim]")
-        console.print(f"[dim]Dry run: {dry_run}[/dim]")
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Processing songs...", total=len(songs))
+
+            for _i, song in enumerate(songs, 1):
+                progress.update(task, description=f"Processing: {song.title[:30]}...")
+
+                try:
+                    # Search for candidates
+                    candidates = search_spotify_tracks(
+                        song, spotify_client, session_config
+                    )
+
+                    # Score candidates
+                    if candidates:
+                        candidates = score_candidates(song, candidates, session_config)
+
+                    # Make decision
+                    decision = make_decision(
+                        song, candidates, session_config, interactive
+                    )
+                    decisions.append(decision)
+
+                    # Like the track if decision was positive and not dry run
+                    if decision.chosen_candidate and not dry_run:
+                        if spotify_client.like_track(
+                            decision.chosen_candidate.spotify_id
+                        ):
+                            liked_count += 1
+                            if verbose:
+                                console.print(
+                                    f"[green]✓[/green] Liked: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
+                                )
+                        else:
+                            if verbose:
+                                console.print(
+                                    f"[red]✗[/red] Failed to like: {decision.chosen_candidate.title}"
+                                )
+                    elif decision.chosen_candidate and dry_run:
+                        liked_count += 1  # Count what would be liked
+                        if verbose:
+                            console.print(
+                                f"[blue]🔍[/blue] Would like: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
+                            )
+
+                    progress.advance(task)
+
+                except KeyboardInterrupt:
+                    console.print("\n[yellow]⚠️  Migration cancelled by user[/yellow]")
+                    break
+                except Exception as e:
+                    console.print(f"[red]❌ Error processing '{song.title}': {e}[/red]")
+                    continue
+
+        # Show summary
+        if not quiet:
+            summary = get_decision_summary(decisions)
+            console.print("\n[bold]📊 Migration Summary:[/bold]")
+            console.print(f"  Total songs processed: {summary['total']}")
+            console.print(
+                f"  Successfully matched: [green]{summary['auto_accept'] + summary['manual_accept']}[/green]"
+            )
+            console.print(
+                f"  Automatically accepted: [green]{summary['auto_accept']}[/green]"
+            )
+            console.print(
+                f"  Manually accepted: [green]{summary['manual_accept']}[/green]"
+            )
+            console.print(f"  Songs liked on Spotify: [cyan]{liked_count}[/cyan]")
+            console.print(f"  Skipped: [yellow]{summary['skipped']}[/yellow]")
+            console.print(
+                f"  Rejected: [red]{summary['auto_reject'] + summary['manual_reject']}[/red]"
+            )
+            console.print(f"  Success rate: [cyan]{summary['success_rate']:.1%}[/cyan]")
+
+            if dry_run:
+                console.print(
+                    "\n[blue]🔍 This was a dry run - no tracks were actually liked[/blue]"
+                )
 
         if not quiet:
             runtime = time.time() - start_time

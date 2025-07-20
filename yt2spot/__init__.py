@@ -8,6 +8,6 @@ to Spotify playlists with intelligent fuzzy matching.
 from yt2spot.version import __version__
 
 __author__ = "Tyrone Marhguy"
-__email__ = "your-email@example.com"
+__email__ = "tmarhguy@seas.upenn.edu"
 
 __all__ = ["__version__"]

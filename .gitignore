@@ -102,8 +102,16 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+# Environment variables
 .env
-.venv
+.env.local
+.env.*.local
+
+# Credentials and secrets
+config.toml
+.yt2spot.toml
+credentials.json
+.spotify_cache
 env/
 venv/
 ENV/

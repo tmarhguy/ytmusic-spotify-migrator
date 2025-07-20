@@ -12,17 +12,28 @@ MatchStatus = Literal["ACCEPT", "SKIP", "UNMATCHED", "AMBIGUOUS"]
 class SongInput:
     """Represents a parsed song from the input file."""
 
-    raw_line: str
     title: str
-    artist_primary: str
-    features: list[str] = field(default_factory=list)
+    artist: str
+    album: str = ""
+    duration: str = ""
+    source_line: int = 0
     normalized_key: str = ""  # Will be set after normalization
 
     def __post_init__(self) -> None:
         """Generate normalized key if not provided."""
         if not self.normalized_key:
             # Basic normalization - will be enhanced by normalize.py
-            self.normalized_key = f"{self.title.lower()}|{self.artist_primary.lower()}"
+            self.normalized_key = f"{self.title.lower()}|{self.artist.lower()}"
+
+    @property
+    def artist_primary(self) -> str:
+        """Get primary artist for backwards compatibility."""
+        return self.artist
+
+    @property
+    def raw_line(self) -> str:
+        """Get source line for backwards compatibility."""
+        return f"Line {self.source_line}: {self.title} - {self.artist}"
 
 
 @dataclass
@@ -31,25 +42,30 @@ class MatchCandidate:
 
     spotify_id: str
     title: str
-    artists: list[str]
-    popularity: int
+    artist: str  # Primary artist
+    all_artists: str  # All artists as comma-separated string
+    album: str
     duration_ms: int
-    explicit: bool = False
-    album_name: str = ""
-    release_date: str = ""
+    popularity: int
     preview_url: str | None = None
-    score_components: dict[str, float] = field(default_factory=dict)
-    final_score: float = 0.0
+    spotify_url: str = ""
+
+    # Scoring fields
+    match_score: float = 0.0
+    title_score: float = 0.0
+    artist_score: float = 0.0
+    album_score: float = 0.0
+    search_query: str = ""
 
     @property
     def primary_artist(self) -> str:
         """Get the primary (first) artist."""
-        return self.artists[0] if self.artists else ""
+        return self.artist
 
     @property
     def all_artists_str(self) -> str:
         """Get all artists as a comma-separated string."""
-        return ", ".join(self.artists)
+        return self.all_artists
 
     @property
     def duration_str(self) -> str:
@@ -64,16 +80,19 @@ class MatchDecision:
     """Represents the final decision for a song match."""
 
     input_song: SongInput
-    chosen: MatchCandidate | None = None
-    status: MatchStatus = "UNMATCHED"
+    chosen_candidate: MatchCandidate | None = None
+    decision: str = "no_candidates"  # auto_accept, manual_accept, auto_reject, manual_reject, skipped, no_candidates
+    confidence: float = 0.0
     reason: str = ""
     all_candidates: list[MatchCandidate] = field(default_factory=list)
-    user_decision: bool = False  # True if user made manual choice
 
     @property
     def is_matched(self) -> bool:
         """Check if the song was successfully matched."""
-        return self.status == "ACCEPT" and self.chosen is not None
+        return (
+            self.decision in ["auto_accept", "manual_accept"]
+            and self.chosen_candidate is not None
+        )
 
 
 @dataclass

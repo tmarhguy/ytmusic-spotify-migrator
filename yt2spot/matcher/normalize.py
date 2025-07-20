@@ -32,12 +32,15 @@ FEATURE_PATTERNS = [
 ]
 
 
-def normalize_title(title: str) -> tuple[str, list[str]]:
+def normalize_title(title: str) -> str:
     """
-    Normalize a song title and extract featured artists.
+    Normalize a song title by removing common YouTube qualifiers.
+
+    Args:
+        title: Raw song title from YouTube Music
 
     Returns:
-        Tuple of (normalized_title, featured_artists)
+        Normalized title string
     """
     # Store original for reference
     original = title.strip()
@@ -68,7 +71,7 @@ def normalize_title(title: str) -> tuple[str, list[str]]:
     # Remove trailing/leading punctuation except essential ones
     normalized = normalized.strip(" -()[]")
 
-    return normalized, features
+    return normalized
 
 
 def normalize_artist(artist: str) -> str:

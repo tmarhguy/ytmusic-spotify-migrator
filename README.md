@@ -12,6 +12,7 @@ YT2Spot is a command-line tool that reads a text export of your YouTube Music li
 ## 🎯 Features
 
 ### Core Migration Features
+
 - **Multi-format input support**: CSV, JSON, TXT files
 - **Intelligent track matching**: Advanced fuzzy matching algorithms
 - **Playlist management**: Create, update, and organize Spotify playlists
@@ -20,6 +21,7 @@ YT2Spot is a command-line tool that reads a text export of your YouTube Music li
 - **Error handling**: Graceful handling of API limits and network issues
 
 ### �️ Utility Tools
+
 - **[Text-to-CSV Preprocessor](./tools/text-to-csv/)**: Clean and convert raw YouTube Music playlist exports into structured CSV format
 
 ## 🚀 Quick Start

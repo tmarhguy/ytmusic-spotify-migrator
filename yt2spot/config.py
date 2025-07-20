@@ -45,8 +45,8 @@ class ConfigManager:
         "auth": {
             "client_id": "",
             "client_secret": "",
-            "redirect_uri": "http://localhost:8888/callback",
-            "cache_file": ".cache-yt2spot",
+            "redirect_uri": "http://127.0.0.1:3000/auth/callback",
+            "cache_file": ".spotify_cache",
         },
     }
 

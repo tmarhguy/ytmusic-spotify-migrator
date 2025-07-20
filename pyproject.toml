@@ -28,6 +28,7 @@ classifiers = [
 
 dependencies = [
     "spotipy>=2.23.0",          # Spotify Web API wrapper
+    "python-dotenv>=1.0.0",     # Environment variable loading
     "rapidfuzz>=3.5.0",         # Fast fuzzy string matching
     "tqdm>=4.66.0",             # Progress bars
     "click>=8.1.0",             # CLI framework (better than argparse)
