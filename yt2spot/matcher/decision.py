@@ -2,6 +2,7 @@
 
 # Placeholder for decision module - will be implemented in Sprint 1
 
-def make_decision():
+
+def make_decision() -> None:
     """Make final decision on track matches."""
     pass

@@ -1,7 +1,6 @@
 """Test configuration for YT2Spot."""
 
 import pytest
-from pathlib import Path
 
 
 @pytest.fixture
@@ -17,7 +16,7 @@ Like a Rolling Stone - Bob Dylan
 Hey Jude - The Beatles
 Purple Haze - Jimi Hendrix
 Good Vibrations - The Beach Boys"""
-    
+
     file_path = tmp_path / "test_input.txt"
     file_path.write_text(content)
     return file_path
@@ -27,7 +26,7 @@ Good Vibrations - The Beach Boys"""
 def sample_config():
     """Create a sample configuration for testing."""
     from yt2spot.models import SessionConfig
-    
+
     return SessionConfig(
         input_path="test_input.txt",
         playlist_name="Test Playlist",

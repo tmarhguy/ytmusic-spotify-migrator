@@ -2,6 +2,7 @@
 
 # Placeholder for logging utilities - will be implemented in Sprint 2
 
-def setup_logging():
+
+def setup_logging() -> None:
     """Set up structured logging."""
     pass
