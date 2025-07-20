@@ -2,8 +2,8 @@
 
 [![PyPI](https://img.shields.io/pypi/v/yt2spot.svg)](https://pypi.org/project/yt2spot/)
 [![Python](https://img.shields.io/pypi/pyversions/yt2spot.svg)](https://pypi.org/project/yt2spot/)
-[![License](https://img.shields.io/github/license/tyronemarhguy/yt2spot.svg)](LICENSE)
-[![Tests](https://img.shields.io/github/workflow/status/tyronemarhguy/yt2spot/Tests)](https://github.com/tyronemarhguy/yt2spot/actions)
+[![License](https://img.shields.io/github/license/tmarhguy/ytmusic-spotify-migrator.svg)](LICENSE)
+[![Tests](https://img.shields.io/github/workflow/status/tmarhguy/ytmusic-spotify-migrator/Tests)](https://github.com/tmarhguy/ytmusic-spotify-migrator/actions)
 
 **Migrate your YouTube Music liked songs to Spotify playlists with intelligent fuzzy matching.**
 
@@ -69,6 +69,7 @@ To export your liked songs from YouTube Music:
 5. Find the text file with your liked songs
 
 The expected format is:
+
 ```
 Song Title - Artist Name
 Another Song - Another Artist (Official Video)
@@ -85,14 +86,14 @@ YT2Spot supports multiple configuration methods (in order of precedence):
 
 ### Configuration Options
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `hard_threshold` | 0.87 | Auto-accept threshold (0.0-1.0) |
-| `reject_threshold` | 0.60 | Auto-reject threshold (0.0-1.0) |
-| `fuzzy_threshold` | 0.80 | Fuzzy matching minimum (0.0-1.0) |
-| `max_candidates` | 5 | Max search results per song |
-| `playlist_name` | "YT Music Liked Songs" | Target playlist name |
-| `public` | true | Make playlist public |
+| Setting            | Default                | Description                      |
+| ------------------ | ---------------------- | -------------------------------- |
+| `hard_threshold`   | 0.87                   | Auto-accept threshold (0.0-1.0)  |
+| `reject_threshold` | 0.60                   | Auto-reject threshold (0.0-1.0)  |
+| `fuzzy_threshold`  | 0.80                   | Fuzzy matching minimum (0.0-1.0) |
+| `max_candidates`   | 5                      | Max search results per song      |
+| `playlist_name`    | "YT Music Liked Songs" | Target playlist name             |
+| `public`           | true                   | Make playlist public             |
 
 ### Sample Configuration
 
@@ -150,6 +151,7 @@ YT2Spot uses a sophisticated matching algorithm that considers:
 YT2Spot generates comprehensive reports:
 
 ### Console Output
+
 ```
 🎵 YT2Spot v0.1.0
 YouTube Music → Spotify Migration Tool
@@ -172,6 +174,7 @@ Accuracy: 704/735 = 95.8%
 ```
 
 ### Log Files
+
 - `logs/session_summary.json` - Complete session statistics
 - `logs/unmatched.txt` - Songs that couldn't be matched
 - `logs/ambiguous.csv` - Detailed candidate information
@@ -220,8 +223,8 @@ Accuracy: 704/735 = 95.8%
 ### Setup Development Environment
 
 ```bash
-git clone https://github.com/tyronemarhguy/yt2spot.git
-cd yt2spot
+git clone https://github.com/tmarhguy/ytmusic-spotify-migrator.git
+cd ytmusic-spotify-migrator
 make setup
 ```
 
@@ -243,15 +246,15 @@ make type-check    # Run mypy type checking
 
 ## 🗺️ Roadmap
 
-| Version | Features |
-|---------|----------|
-| v0.1.0 | ✅ MVP: Basic migration, CLI, configuration |
-| v0.2.0 | 🚧 Enhanced fuzzy matching, comprehensive logging |
-| v0.3.0 | 📋 Interactive mode, incremental updates |
-| v0.4.0 | ⚙️ Config file system, environment overrides |
-| v0.5.0 | 🏃 Multi-threaded processing, performance improvements |
-| v0.6.0 | 🔌 Plugin system for other music services |
-| v1.0.0 | 🎯 Production ready, full test coverage |
+| Version | Features                                               |
+| ------- | ------------------------------------------------------ |
+| v0.1.0  | ✅ MVP: Basic migration, CLI, configuration            |
+| v0.2.0  | 🚧 Enhanced fuzzy matching, comprehensive logging      |
+| v0.3.0  | 📋 Interactive mode, incremental updates               |
+| v0.4.0  | ⚙️ Config file system, environment overrides           |
+| v0.5.0  | 🏃 Multi-threaded processing, performance improvements |
+| v0.6.0  | 🔌 Plugin system for other music services              |
+| v1.0.0  | 🎯 Production ready, full test coverage                |
 
 ## 🤝 Contributing
 
@@ -278,9 +281,9 @@ This tool is for personal use only. Ensure you have the rights to the music you'
 
 ## 🙋‍♂️ Support
 
-- 📖 [Documentation](https://github.com/tyronemarhguy/yt2spot/wiki)
-- 🐛 [Issue Tracker](https://github.com/tyronemarhguy/yt2spot/issues)
-- 💬 [Discussions](https://github.com/tyronemarhguy/yt2spot/discussions)
+- 📖 [Documentation](https://github.com/tmarhguy/ytmusic-spotify-migrator/wiki)
+- 🐛 [Issue Tracker](https://github.com/tmarhguy/ytmusic-spotify-migrator/issues)
+- 💬 [Discussions](https://github.com/tmarhguy/ytmusic-spotify-migrator/discussions)
 
 ---
 
