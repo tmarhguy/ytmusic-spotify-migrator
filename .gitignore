@@ -142,10 +142,27 @@ dmypy.json
 logs/
 *.csv
 *.json
+*.log
 unmatched.txt
 matched.txt
 ambiguous.txt
 session_*.json
+
+# Migration output files
+migration_*.log
+migration_*.txt
+rejected_*.csv
+rejected_*.txt
+rejected_songs_report.md
+full_migration_log.txt
+migration_summary.md
+extract_rejected_songs.py
+
+# Allow specific documentation files
+!README.md
+!literature.md
+!tools/README.md
+!tools/text-to-csv/README.md
 
 # IDE
 .vscode/

@@ -185,8 +185,7 @@ def migrate(
         if not quiet:
             show_banner(session_config)
 
-        # TODO: Import and run the main pipeline
-        # This will be implemented in the next sprint
+        # Import and run the main migration pipeline
         from yt2spot.input_parser import parse_input_file
         from yt2spot.matcher.decision import get_decision_summary, make_decision
         from yt2spot.matcher.scoring import score_candidates

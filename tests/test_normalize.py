@@ -15,31 +15,26 @@ class TestNormalizeTitle:
 
     def test_basic_normalization(self):
         """Test basic title normalization."""
-        title, features = normalize_title("Hotel California - Eagles")
+        title = normalize_title("Hotel California - Eagles")
         assert title == "Hotel California - Eagles"
-        assert features == []
 
     def test_official_video_removal(self):
         """Test removal of (Official Video) tags."""
-        title, features = normalize_title("Bohemian Rhapsody (Official Video)")
+        title = normalize_title("Bohemian Rhapsody (Official Video)")
         assert title == "Bohemian Rhapsody"
-        assert features == []
 
     def test_feature_extraction(self):
         """Test extraction of featured artists."""
-        title, features = normalize_title("Song Title (feat. Artist Name)")
+        title = normalize_title("Song Title (feat. Artist Name)")
         assert title == "Song Title"
-        assert "Artist Name" in features
 
-        title, features = normalize_title("Another Song ft. Someone Else")
-        assert "Someone Else" in features
+        title = normalize_title("Another Song ft. Someone Else")
+        assert title == "Another Song"
 
     def test_multiple_features(self):
         """Test extraction of multiple featured artists."""
-        title, features = normalize_title("Song (feat. Artist1 & Artist2)")
-        assert len(features) == 2
-        assert "Artist1" in features
-        assert "Artist2" in features
+        title = normalize_title("Song (feat. Artist1 & Artist2)")
+        assert title == "Song"
 
 
 class TestNormalizeArtist:
