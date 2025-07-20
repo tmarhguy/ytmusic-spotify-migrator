@@ -9,16 +9,18 @@
 
 YT2Spot is a command-line tool that reads a text export of your YouTube Music liked songs and creates a corresponding Spotify playlist using sophisticated matching algorithms to find the best track matches.
 
-## ✨ Features
+## 🎯 Features
 
-- 🎯 **Intelligent Matching**: Advanced fuzzy string matching with configurable thresholds
-- 🔄 **Multiple Modes**: Automatic, interactive, and dry-run modes
-- 📊 **Detailed Reporting**: Comprehensive logs of matched, unmatched, and ambiguous songs
-- ⚡ **Smart Retry Logic**: Robust handling of API rate limits and network issues
-- 🔧 **Highly Configurable**: CLI arguments, config files, and environment variables
-- 📝 **Incremental Updates**: Re-run to add only new songs without duplicates
-- 🎨 **Rich Terminal Output**: Beautiful progress bars and colored output
-- 🔒 **Privacy First**: All processing happens locally, no cloud storage
+### Core Migration Features
+- **Multi-format input support**: CSV, JSON, TXT files
+- **Intelligent track matching**: Advanced fuzzy matching algorithms
+- **Playlist management**: Create, update, and organize Spotify playlists
+- **Duplicate detection**: Prevents duplicate tracks in target playlists
+- **Progress tracking**: Real-time migration progress with detailed logging
+- **Error handling**: Graceful handling of API limits and network issues
+
+### �️ Utility Tools
+- **[Text-to-CSV Preprocessor](./tools/text-to-csv/)**: Clean and convert raw YouTube Music playlist exports into structured CSV format
 
 ## 🚀 Quick Start
 
@@ -58,7 +60,9 @@ yt2spot migrate --input liked_songs.txt --interactive
 yt2spot migrate --input liked_songs.txt --fuzzy --fuzzy-threshold 0.75
 ```
 
-## 📥 Getting Your YouTube Music Export
+## 📥 Getting Your YouTube Music Data
+
+### Option 1: Using Google Takeout (Recommended)
 
 To export your liked songs from YouTube Music:
 
@@ -68,11 +72,24 @@ To export your liked songs from YouTube Music:
 4. Download and extract the archive
 5. Find the text file with your liked songs
 
-The expected format is:
+### Option 2: Manual Export with Preprocessing
 
-```
-Song Title - Artist Name
-Another Song - Another Artist (Official Video)
+If you have raw YouTube Music playlist data in text format, use our preprocessing tool:
+
+1. Place your raw data in `tools/text-to-csv/music-taste.txt`
+2. Run the text-to-csv preprocessor:
+   ```bash
+   cd tools/text-to-csv
+   python cleaner.py
+   ```
+3. Use the generated `output.csv` with the main migration tool
+
+The expected format after preprocessing is:
+
+```csv
+Title,Artist,Album,Duration
+"Song Title","Artist Name","Album Name","3:45"
+"Another Song","Another Artist","Single","4:12"
 ```
 
 ## 🎛️ Configuration
@@ -271,7 +288,24 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 7. Push: `git push origin feature/amazing-feature`
 8. Create a Pull Request
 
-## 📜 License
+## � Project Structure
+
+```
+ytmusic-spotify-migrator/
+├── yt2spot/                  # Main package
+│   ├── cli.py               # Command-line interface
+│   ├── config.py            # Configuration management
+│   ├── models.py            # Data models
+│   └── matcher/             # Matching algorithms
+├── tools/                   # Utility tools
+│   └── text-to-csv/         # Text preprocessing tool
+├── tests/                   # Test suite
+├── literature.md            # Project specification
+├── pyproject.toml           # Project configuration
+└── README.md               # This file
+```
+
+## �📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
