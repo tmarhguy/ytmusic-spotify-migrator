@@ -252,18 +252,18 @@ export const ServiceSelector: React.FC<ServiceSelectorProps> = ({ onSelectionCom
 
       {/* Features Preview */}
       <div className="card bg-gradient-to-r from-spotify-green/10 to-blue-500/10 border-spotify-green/30">
-        <h3 className="text-lg font-semibold text-white mb-4">✨ What You'll Experience</h3>
+        <h3 className="text-lg font-semibold text-white mb-4"> What You'll Experience</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div className="text-center">
-            <div className="text-spotify-green mb-2">🔐 Secure Authentication</div>
+            <div className="text-spotify-green mb-2"> Secure Authentication</div>
             <div className="text-spotify-gray">OAuth login for seamless access</div>
           </div>
           <div className="text-center">
-            <div className="text-spotify-green mb-2">📊 Live Progress</div>
+            <div className="text-spotify-green mb-2"> Live Progress</div>
             <div className="text-spotify-gray">Watch your playlists grow in real-time</div>
           </div>
           <div className="text-center">
-            <div className="text-spotify-green mb-2">🎯 Smart Matching</div>
+            <div className="text-spotify-green mb-2"> Smart Matching</div>
             <div className="text-spotify-gray">AI-powered song matching with manual review</div>
           </div>
         </div>
