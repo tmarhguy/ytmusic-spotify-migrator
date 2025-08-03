@@ -105,6 +105,8 @@ celerybeat.pid
 # Environment variables
 .env
 .env.local
+.env.development
+.env.production
 .env.*.local
 
 # Credentials and secrets
@@ -112,6 +114,9 @@ config.toml
 .yt2spot.toml
 credentials.json
 .spotify_cache
+*.key
+*.pem
+*.p12
 env/
 venv/
 ENV/
@@ -141,12 +146,12 @@ dmypy.json
 .yt2spot.toml
 logs/
 *.csv
-*.json
+migration_*.json
+session_*.json
 *.log
 unmatched.txt
 matched.txt
 ambiguous.txt
-session_*.json
 
 # Migration output files
 migration_*.log
@@ -157,6 +162,15 @@ rejected_songs_report.md
 full_migration_log.txt
 migration_summary.md
 extract_rejected_songs.py
+
+# Allow specific configuration files
+!package.json
+!package-lock.json
+!tsconfig*.json
+!vite.config.*
+!tailwind.config.*
+!postcss.config.*
+!eslintrc.*
 
 # Allow specific documentation files
 !README.md
@@ -173,6 +187,22 @@ extract_rejected_songs.py
 
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn/
+.pnp.*
+
+# Frontend build
+dist/
+build/
+coverage/
 
 # Test files
 test_input.txt
