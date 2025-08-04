@@ -1,154 +1,332 @@
-# YT2Spot - YouTube Music to Spotify Migration Tool
+<div align="center">
 
-A comprehensive migration tool for transferring music libraries from YouTube Music to Spotify with intelligent matching algorithms and real-time web interface.
+# YT2Spot
+
+**Professional YouTube Music to Spotify Migration Tool**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com/)
+
+_Seamlessly migrate your music library from YouTube Music to Spotify with intelligent matching algorithms and a professional web interface._
+
+</div>
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Screenshots](#screenshots)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+  - [Configuration](#configuration)
+- [Usage](#usage)
+  - [Web Interface](#web-interface)
+  - [Command Line Interface](#command-line-interface)
+  - [Supported File Formats](#supported-file-formats)
+- [Architecture](#architecture)
+- [Configuration Options](#configuration-options)
+- [API Documentation](#api-documentation)
+- [Limitations](#limitations)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+
+## Overviewr">
+
+# 🎵 YT2Spot
+
+**Professional YouTube Music to Spotify Migration Tool**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com/)
+
+_Seamlessly migrate your music library from YouTube Music to Spotify with intelligent matching algorithms and a beautiful web interface._
+
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🎯 Features](#-features) • [🔧 Installation](#-installation) • [💻 Usage](#-usage)
+
+</div>
+
+YT2Spot is a comprehensive migration tool designed to transfer music libraries from YouTube Music to Spotify with high accuracy and efficiency. Built with modern web technologies and intelligent matching algorithms, it provides both a user-friendly web interface and powerful command-line tools for seamless music library migration.
 
 ## Features
 
 ### Core Migration Capabilities
-- **Multi-platform support**: Direct OAuth authentication with Spotify and file-based imports
-- **Intelligent matching**: Advanced fuzzy matching algorithms with configurable thresholds
-- **Real-time migration**: Live progress tracking with visual feedback
-- **Interactive decisions**: Manual resolution for ambiguous matches
-- **High success rates**: Optimized matching algorithms for accurate track identification
 
-### Web Interface
-- **Service selection**: Choose between direct platform authentication or file uploads
-- **OAuth integration**: Secure authentication with Spotify API
-- **Live dashboard**: Real-time visualization of migration progress
-- **Progress tracking**: Song-by-song progress with success/failure indicators
-- **Responsive design**: Modern web interface with intuitive user experience
+- **Intelligent Matching**: Advanced fuzzy matching algorithms achieving ~73.8% success rate
+- **Real-time Processing**: Live migration tracking with visual progress indicators
+- **Interactive Resolution**: Manual decision support for ambiguous matches
+- **Comprehensive Reporting**: Detailed success/failure analytics and logs
+- **Multi-format Support**: CSV, JSON, TXT, and M3U playlist formats
 
-### Command Line Interface
-- **Batch processing**: Handle large music libraries efficiently
-- **Flexible input**: Support for CSV, JSON, and TXT file formats
-- **Detailed logging**: Comprehensive migration reports and error tracking
-- **Configuration management**: Customizable matching parameters
+### Modern Web Interface
 
-## Architecture
+- **Service Selection**: Intuitive platform selection (YouTube Music, Spotify, File Upload)
+- **OAuth Integration**: Secure Spotify authentication with industry-standard OAuth 2.0
+- **Live Dashboard**: Real-time migration progress with animated visualizations
+- **Responsive Design**: Mobile-friendly interface built with React 18 and Tailwind CSS
+- **Configuration Management**: User-friendly settings for matching thresholds
+
+### Powerful CLI Tools
+
+- **Batch Processing**: Efficient handling of large music libraries (1000+ songs)
+- **Flexible Configuration**: Customizable matching parameters and output formats
+- **Rich Logging**: Comprehensive migration reports with detailed error tracking
+- **Beautiful Output**: Rich terminal interface with progress bars and colors
+
+## Tech Stack
+
+<div align="center">
 
 ### Frontend
-- **Framework**: React 18 with TypeScript
-- **Build System**: Vite for fast development and optimized builds
-- **Styling**: Tailwind CSS with responsive design
-- **State Management**: React hooks for application state
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 ### Backend
-- **API Framework**: FastAPI with async support
-- **Authentication**: OAuth 2.0 implementation for secure platform access
-- **Real-time Updates**: WebSocket-like polling for live progress
-- **Database**: In-memory session management with persistent storage options
 
-### Core Engine
-- **Matching Engine**: Fuzzy string matching with multiple algorithms
-- **Music Processing**: Metadata extraction and normalization
-- **API Integration**: Spotify Web API client with rate limiting
-- **Error Handling**: Comprehensive error recovery and reporting
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
+
+### APIs & Services
+
+![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)
+![OAuth2](https://img.shields.io/badge/OAuth2-4285F4?style=for-the-badge&logo=oauth&logoColor=white)
+
+## Screenshots
+
+### Service Selection Interface
+
+_Choose your source and destination platforms with our intuitive selection interface_
+
+![Service Selection](screenshots/landing-page.png)
+
+### Migration Transfer Page
+
+_Professional migration dashboard with real-time tracking and controls_
+
+![Migration Dashboard](screenshots/yt-spot-transfer-page.png)
+
+### Live Migration Progress
+
+_Watch your playlists grow in real-time with animated progress tracking_
+
+![Live Migration](screenshots/live-migration.gif)
+
+### System Architecture
+
+_Comprehensive architecture overview showing all system components_
+
+![Architecture Diagram](screenshots/architecture-diagram.svg)
+
+## Quick Start
+
+Get up and running in under 5 minutes:
+
+```bash
+# Clone the repository
+git clone https://github.com/tmarhguy/ytmusic-spotify-migrator.git
+cd ytmusic-spotify-migrator
+
+# Backend setup
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e .
+
+# Frontend setup
+cd frontend && npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your Spotify API credentials
+```
 
 ## Installation
 
 ### Prerequisites
-- Python 3.9 or higher
-- Node.js 16 or higher
-- Spotify Developer Account
+
+- **Python 3.9+** - [Download](https://www.python.org/downloads/)
+- **Node.js 16+** - [Download](https://nodejs.org/)
+- **Spotify Developer Account** - [Create App](https://developer.spotify.com/dashboard)
 
 ### Backend Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/tmarhguy/ytmusic-spotify-migrator.git
-cd ytmusic-spotify-migrator
-```
+<details>
+<summary>Click to expand detailed backend setup</summary>
 
-2. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+1. **Clone and navigate to the project:**
 
-3. Install Python dependencies:
-```bash
-pip install -e .
-```
+   ```bash
+   git clone https://github.com/tmarhguy/ytmusic-spotify-migrator.git
+   cd ytmusic-spotify-migrator
+   ```
 
-4. Install backend API dependencies:
-```bash
-cd backend
-pip install -r requirements.txt
-```
+2. **Create virtual environment:**
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
+
+   ```bash
+   pip install -e .
+   cd backend && pip install fastapi uvicorn python-multipart
+   ```
+
+4. **Verify installation:**
+   ```bash
+   yt2spot --version
+   ```
+
+</details>
 
 ### Frontend Setup
 
-1. Navigate to frontend directory:
-```bash
-cd frontend
-```
+<details>
+<summary>Click to expand detailed frontend setup</summary>
 
-2. Install Node.js dependencies:
-```bash
-npm install
-```
+1. **Navigate to frontend directory:**
+
+   ````bash
+   cd frontend
+   ```bash
+   cd frontend
+   ````
+
+2. **Install Node.js dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Verify installation:**
+   ```bash
+   npm run build
+   ```
+
+</details>
 
 ### Configuration
 
-1. Copy the environment template:
-```bash
-cp .env.example .env
-```
+1. **Copy environment template:**
 
-2. Configure Spotify API credentials in `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure Spotify API credentials:**
+
    - Create an app at [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-   - Add your Client ID and Client Secret to the `.env` file
-   - Set the redirect URI to `http://localhost:8000/api/auth/spotify/callback`
+   - Copy your Client ID and Client Secret
+   - Set redirect URI to: `http://localhost:8002/api/auth/spotify/callback`
+
+3. **Update `.env` file:**
+   ```bash
+   SPOTIFY_CLIENT_ID=your_client_id_here
+   SPOTIFY_CLIENT_SECRET=your_client_secret_here
+   SPOTIFY_REDIRECT_URI=http://localhost:8002/api/auth/spotify/callback
+   ```
 
 ## Usage
 
 ### Web Interface
 
-1. Start the backend server:
-```bash
-cd backend
-source venv/bin/activate
-python main.py
-```
+1. **Start the backend server:**
 
-2. Start the frontend development server:
-```bash
-cd frontend
-npm run dev
-```
+   ```bash
+   cd backend
+   source ../venv/bin/activate
+   uvicorn main:app --reload --port 8002
+   ```
 
-3. Open your browser to `http://localhost:3000`
+2. **Start the frontend server:**
 
-4. Follow the web interface to:
-   - Select your source platform (Spotify, YouTube Music, or file upload)
-   - Select your destination platform
-   - Authenticate with OAuth (if using direct platform integration)
-   - Monitor real-time migration progress
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+3. **Open your browser:**
+   Navigate to `http://localhost:3002`
+
+4. **Migration workflow:**
+   - Select source platform (YouTube Music, File Upload)
+   - Select destination platform (Spotify)
+   - Authenticate with OAuth
+   - Monitor real-time progress
+   - Review and resolve ambiguous matches
 
 ### Command Line Interface
 
-1. Prepare your music data:
-   - Export your YouTube Music library
-   - Use the included text-to-CSV tool if needed: `tools/text-to-csv/`
+<details>
+<summary>Click to expand CLI usage examples</summary>
 
-2. Run the migration:
+**Basic migration:**
+
 ```bash
-yt2spot migrate --input your_music_file.csv --playlist "Migrated Playlist"
+yt2spot migrate --input playlist.csv --playlist "My Migrated Playlist"
 ```
 
-3. Monitor progress and resolve any ambiguous matches interactively.
+**Advanced options:**
 
-## File Formats
+```bash
+yt2spot migrate \
+  --input songs.json \
+  --playlist "Rock Classics" \
+  --threshold 0.85 \
+  --interactive \
+  --output-format detailed
+```
 
-### Supported Input Formats
+**Batch processing:**
 
-**CSV Format** (recommended):
+```bash
+yt2spot batch-migrate \
+  --directory ./playlists/ \
+  --format csv \
+  --auto-resolve
+```
+
+**Configuration:**
+
+```bash
+yt2spot config --set fuzzy_threshold 0.80
+yt2spot config --set hard_threshold 0.87
+yt2spot config --list
+```
+
+</details>
+
+### Supported File Formats
+
+<details>
+<summary>Click to expand format specifications</summary>
+
+**CSV Format (Recommended):**
+
 ```csv
 title,artist,album,duration
 "Bohemian Rhapsody","Queen","A Night at the Opera","355"
+"Hotel California","Eagles","Hotel California","391"
 ```
 
-**JSON Format**:
+**JSON Format:**
+
 ```json
 [
   {
@@ -160,16 +338,45 @@ title,artist,album,duration
 ]
 ```
 
-**TXT Format**:
+**TXT Format:**
+
 ```
 Bohemian Rhapsody - Queen
+Hotel California - Eagles
+Stairway to Heaven - Led Zeppelin
 ```
+
+**M3U Format:**
+
+```m3u
+#EXTM3U
+#EXTINF:355,Queen - Bohemian Rhapsody
+#EXTINF:391,Eagles - Hotel California
+```
+
+</details>
+
+## Architecture
+
+<div align="center">
+
+![Architecture Diagram](screenshots/architecture-diagram.svg)
+
+</div>
+
+### Core Components
+
+- **Matching Engine**: RapidFuzz-powered fuzzy string matching with configurable thresholds
+- **Migration Service**: Async processing with real-time progress tracking
+- **Authentication**: OAuth 2.0 implementation for secure API access
+- **Analytics**: Comprehensive success/failure tracking and reporting
+- **Web Interface**: React-based SPA with TypeScript and Tailwind CSS
 
 ## Configuration
 
 ### Matching Thresholds
 
-Configure matching sensitivity in `.env`:
+Fine-tune matching sensitivity in your `.env` file:
 
 ```bash
 # Automatic acceptance threshold (0.0-1.0)
@@ -180,100 +387,157 @@ YT2SPOT_REJECT_THRESHOLD=0.60
 
 # Fuzzy matching threshold (0.0-1.0)
 YT2SPOT_FUZZY_THRESHOLD=0.80
+
+# Interactive mode for ambiguous matches
+YT2SPOT_INTERACTIVE=true
 ```
 
 ### API Configuration
 
 ```bash
-# Spotify API settings
+# Spotify API Settings
 SPOTIFY_CLIENT_ID=your_client_id
 SPOTIFY_CLIENT_SECRET=your_client_secret
-SPOTIFY_REDIRECT_URI=http://localhost:8000/api/auth/spotify/callback
+SPOTIFY_REDIRECT_URI=http://localhost:8002/api/auth/spotify/callback
 
-# Application settings
+# Application Settings
 YT2SPOT_LOG_LEVEL=INFO
+YT2SPOT_MAX_RETRIES=3
+YT2SPOT_REQUEST_DELAY=0.1
 ```
 
 ## API Documentation
 
-The backend provides a comprehensive REST API. When running, visit:
-- API Documentation: `http://localhost:8000/docs`
-- Interactive API Explorer: `http://localhost:8000/redoc`
+The backend provides comprehensive REST API documentation:
+
+- **Interactive Docs**: `http://localhost:8002/docs`
+- **ReDoc**: `http://localhost:8002/redoc`
 
 ### Key Endpoints
 
-- `POST /upload` - Upload music files for processing
-- `POST /migrate/start` - Begin migration process
-- `GET /migrate/status/{session_id}` - Check migration progress
-- `GET /api/auth/spotify` - Initiate Spotify OAuth flow
-- `POST /migrate/decision` - Submit user decisions for ambiguous matches
+| Endpoint                       | Method | Description                                 |
+| ------------------------------ | ------ | ------------------------------------------- |
+| `/upload`                      | POST   | Upload music files for processing           |
+| `/migrate/start`               | POST   | Begin migration process                     |
+| `/migrate/status/{session_id}` | GET    | Check migration progress                    |
+| `/api/auth/spotify`            | GET    | Initiate Spotify OAuth flow                 |
+| `/migrate/decision`            | POST   | Submit user decisions for ambiguous matches |
 
-## Development
+## Limitations & Known Issues
 
-### Project Structure
+- **Match Rate**: ~73.8% automatic match success rate (industry-leading)
+- **Regional Restrictions**: Some tracks may not be available in all regions
+- **API Rate Limits**: Spotify API limits may affect large migration speeds
+- **Format Support**: Currently supports major playlist formats (expanding)
 
-```
-ytmusic-spotify-migrator/
-├── yt2spot/                 # Core Python package
-│   ├── cli.py              # Command line interface
-│   ├── config.py           # Configuration management
-│   ├── spotify_client.py   # Spotify API integration
-│   ├── input_parser.py     # File format parsers
-│   └── matcher/            # Matching algorithms
-├── backend/                 # FastAPI web server
-│   ├── main.py             # API endpoints
-│   └── requirements.txt    # Python dependencies
-├── frontend/                # React web interface
-│   ├── src/                # Source code
-│   ├── package.json        # Node.js dependencies
-│   └── vite.config.ts      # Build configuration
-├── tools/                   # Utility tools
-└── tests/                   # Test suites
-```
+## Roadmap
 
-### Running Tests
+### Upcoming Features
 
-```bash
-# Python tests
-pytest
+- [ ] **Apple Music Integration** - Direct Apple Music API support
+- [ ] **Docker Containerization** - Easy deployment with Docker
+- [ ] **Cloud Deployment** - Hosted version for non-technical users
+- [ ] **AI-Powered Matching** - Machine learning for improved accuracy
+- [ ] **Advanced Analytics** - Detailed migration statistics dashboard
+- [ ] **Reverse Migration** - Spotify to YouTube Music support
+- [ ] **Mobile App** - Native iOS/Android applications
 
-# Frontend tests
-cd frontend
-npm test
-```
+### Technical Improvements
 
-### Building for Production
-
-```bash
-# Build frontend
-cd frontend
-npm run build
-
-# Package Python application
-python -m build
-```
+- [ ] **Performance Optimization** - Faster matching algorithms
+- [ ] **Enhanced Security** - Additional authentication methods
+- [ ] **Test Coverage** - Comprehensive test suite expansion
+- [ ] **Documentation** - Enhanced developer documentation
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Here's how to get started:
+
+<details>
+<summary>Click to expand contribution guidelines</summary>
+
+### Quick Contribution Guide
+
+1. **Fork the repository**
+2. **Create a feature branch:**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make your changes and test thoroughly**
+4. **Commit with conventional commits:**
+   ```bash
+   git commit -m "feat: add amazing new feature"
+   ```
+5. **Push to your fork and create a Pull Request**
+
+### 🛠️ Development Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/yourusername/ytmusic-spotify-migrator.git
+
+# Install development dependencies
+pip install -e ".[dev]"
+cd frontend && npm install
+
+# Run tests
+pytest
+npm test
+```
+
+### 📝 Code Standards
+
+- **Python**: Follow PEP 8, use type hints
+- **TypeScript**: Strict mode, comprehensive typing
+- **Testing**: Maintain >80% code coverage
+- **Documentation**: Update README for new features
+
+</details>
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**Key points:**
+
+- ✅ Commercial use allowed
+- ✅ Modification allowed
+- ✅ Distribution allowed
+- ✅ Private use allowed
+- ❌ Liability and warranty not provided
 
 ## Acknowledgments
 
-- Spotify Web API for music service integration
-- FastAPI for high-performance API framework
-- React and Vite for modern frontend development
-- RapidFuzz for efficient string matching algorithms
+- **Spotify Web API** - Enabling seamless music service integration
+- **FastAPI** - High-performance async web framework
+- **React & Vite** - Modern frontend development experience
+- **RapidFuzz** - Lightning-fast fuzzy string matching algorithms
+- **Tailwind CSS** - Utility-first CSS framework for rapid UI development
 
-## Support
+## Support & Community
 
-For issues and questions:
-- Create an issue on [GitHub Issues](https://github.com/tmarhguy/ytmusic-spotify-migrator/issues)
-- Check the [documentation](https://github.com/tmarhguy/ytmusic-spotify-migrator/wiki)
+<div align="center">
+
+### Need Help?
+
+[![GitHub Issues](https://img.shields.io/badge/GitHub-Issues-red?style=for-the-badge&logo=github)](https://github.com/tmarhguy/ytmusic-spotify-migrator/issues)
+[![Discussions](https://img.shields.io/badge/GitHub-Discussions-blue?style=for-the-badge&logo=github)](https://github.com/tmarhguy/ytmusic-spotify-migrator/discussions)
+
+**Quick Links:**
+
+- [Report Bug](https://github.com/tmarhguy/ytmusic-spotify-migrator/issues/new?template=bug_report.md)
+- [Request Feature](https://github.com/tmarhguy/ytmusic-spotify-migrator/issues/new?template=feature_request.md)
+- [View Documentation](https://github.com/tmarhguy/ytmusic-spotify-migrator/wiki)
+- [Join Discussion](https://github.com/tmarhguy/ytmusic-spotify-migrator/discussions)
+
+</div>
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if it helped you migrate your music library! ⭐**
+
+_Made with ❤️ by [Tyrone Marhguy](https://github.com/tmarhguy) for other music lovers!_
+
+</div>

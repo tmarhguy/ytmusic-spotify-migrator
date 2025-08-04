@@ -121,7 +121,7 @@ function App() {
         <div className="container mx-auto px-4 text-center">
           <p className="mb-2">🎵 YT2Spot - YouTube Music to Spotify Migrator</p>
           <p className="text-sm">
-            Made with ❤️ for music lovers |
+            Made with love for music lovers |
             <a href="https://github.com/tmarhguy/ytmusic-spotify-migrator"
               className="text-spotify-green hover:underline ml-1">
               View on GitHub

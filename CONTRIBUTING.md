@@ -47,7 +47,7 @@ cp .env.example .env
 # Terminal 1: Backend
 cd backend
 source ../venv/bin/activate
-python main.py
+uvicorn main:app --reload --port 8002
 
 # Terminal 2: Frontend
 cd frontend
@@ -59,11 +59,22 @@ npm run dev
 ```
 ytmusic-spotify-migrator/
 ├── yt2spot/                 # Core Python package
+│   ├── matcher/             # Music matching algorithms
+│   └── cli/                 # Command-line interface
 ├── backend/                 # FastAPI web server
+│   ├── main.py              # Server entry point
+│   └── requirements.txt     # Backend dependencies
 ├── frontend/                # React web interface
+│   ├── src/                 # Source files
+│   ├── package.json         # Frontend dependencies
+│   └── vite.config.ts       # Build configuration
+├── screenshots/             # Project screenshots and diagrams
 ├── tools/                   # Utility tools
 ├── tests/                   # Test suites
-└── scripts/                 # Development scripts
+├── scripts/                 # Development scripts
+├── .env.example             # Environment configuration template
+├── pyproject.toml           # Python project configuration
+└── README.md                # Project documentation
 ```
 
 ## Contribution Guidelines
