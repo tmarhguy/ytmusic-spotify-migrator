@@ -14,6 +14,7 @@ Don't Stop Believin' - Journey
 Imagine - John Lennon
 Like a Rolling Stone - Bob Dylan
 Hey Jude - The Beatles
+Wild Things - Jimi Hendrix
 Purple Haze - Jimi Hendrix
 Good Vibrations - The Beach Boys"""
 

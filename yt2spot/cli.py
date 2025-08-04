@@ -5,9 +5,17 @@ from __future__ import annotations
 import sys
 import time
 from pathlib import Path
+from typing import Optional
 
 import click
 from rich.console import Console
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TaskProgressColumn,
+    TextColumn,
+)
 
 from yt2spot.config import load_config
 from yt2spot.models import SessionConfig
@@ -21,6 +29,82 @@ console = Console()
 def cli() -> None:
     """YT2Spot - Migrate YouTube Music liked songs to Spotify playlists."""
     pass
+
+
+def validate_thresholds(hard_threshold: float, reject_threshold: float, fuzzy_threshold: float) -> None:
+    """Validate threshold parameters efficiently."""
+    thresholds = [
+        (hard_threshold, "Hard threshold"),
+        (reject_threshold, "Reject threshold"),
+        (fuzzy_threshold, "Fuzzy threshold")
+    ]
+    
+    for threshold, name in thresholds:
+        if not (0.0 <= threshold <= 1.0):
+            raise click.BadParameter(f"{name} must be between 0.0 and 1.0")
+    
+    if hard_threshold <= reject_threshold:
+        raise click.BadParameter("Hard threshold must be greater than reject threshold")
+
+
+def build_cli_overrides(
+    playlist: str,
+    public: bool,
+    force_recreate: bool,
+    hard_threshold: float,
+    reject_threshold: float,
+    fuzzy_threshold: float,
+    json_logs: bool,
+    quiet: bool,
+    verbose: bool,
+    debug: bool,
+    log_dir: Optional[Path],
+    cache_file: Optional[Path],
+    limit: Optional[int],
+    dry_run: bool,
+    fuzzy: bool,
+    interactive: bool,
+) -> dict:
+    """Build CLI overrides configuration efficiently."""
+    cli_overrides = {
+        "playlists": {
+            "default_name": playlist,
+            "public": public,
+            "force_recreate": force_recreate,
+        },
+        "matching": {
+            "hard_threshold": hard_threshold,
+            "reject_threshold": reject_threshold,
+            "fuzzy_threshold": fuzzy_threshold,
+        },
+        "logging": {
+            "json": json_logs,
+            "quiet": quiet,
+            "verbose": verbose,
+            "debug": debug,
+        },
+    }
+
+    # Add optional overrides only if they have values
+    optional_overrides = [
+        (log_dir, "logging", "log_dir", str),
+        (cache_file, "auth", "cache_file", str),
+        (limit, None, "limit", int),
+        (dry_run, None, "dry_run", bool),
+        (fuzzy, None, "fuzzy", bool),
+        (interactive, None, "interactive", bool),
+    ]
+    
+    for value, section, key, value_type in optional_overrides:
+        if value is not None and (not isinstance(value, bool) or value):
+            if section:
+                if section not in cli_overrides:
+                    cli_overrides[section] = {}
+                cli_overrides[section][key] = value_type(value)
+            else:
+                cli_overrides[key] = value_type(value)
+    
+    return cli_overrides
 
 
 @cli.command()
@@ -127,55 +211,21 @@ def migrate(
     """
     start_time = time.time()
 
-    # Validate threshold values
-    if not (0.0 <= hard_threshold <= 1.0):
-        raise click.BadParameter("Hard threshold must be between 0.0 and 1.0")
-    if not (0.0 <= reject_threshold <= 1.0):
-        raise click.BadParameter("Reject threshold must be between 0.0 and 1.0")
-    if not (0.0 <= fuzzy_threshold <= 1.0):
-        raise click.BadParameter("Fuzzy threshold must be between 0.0 and 1.0")
-    if hard_threshold <= reject_threshold:
-        raise click.BadParameter("Hard threshold must be greater than reject threshold")
-
+    # Validate all parameters at once
+    validate_thresholds(hard_threshold, reject_threshold, fuzzy_threshold)
+    
     # Set verbosity level
     if debug:
         verbose = True
     if quiet and verbose:
         raise click.BadParameter("Cannot use both --quiet and --verbose")
 
-    # Create CLI overrides for configuration
-    cli_overrides = {
-        "playlists": {
-            "default_name": playlist,
-            "public": public,
-            "force_recreate": force_recreate,
-        },
-        "matching": {
-            "hard_threshold": hard_threshold,
-            "reject_threshold": reject_threshold,
-            "fuzzy_threshold": fuzzy_threshold,
-        },
-        "logging": {
-            "json": json_logs,
-            "quiet": quiet,
-            "verbose": verbose,
-            "debug": debug,
-        },
-    }
-
-    # Add optional overrides
-    if log_dir:
-        cli_overrides["logging"]["log_dir"] = str(log_dir)
-    if cache_file:
-        cli_overrides["auth"]["cache_file"] = str(cache_file)
-    if limit:
-        cli_overrides["limit"] = limit
-    if dry_run:
-        cli_overrides["dry_run"] = dry_run
-    if fuzzy:
-        cli_overrides["fuzzy"] = fuzzy
-    if interactive:
-        cli_overrides["interactive"] = interactive
+    # Build configuration overrides efficiently
+    cli_overrides = build_cli_overrides(
+        playlist, public, force_recreate, hard_threshold, reject_threshold,
+        fuzzy_threshold, json_logs, quiet, verbose, debug, log_dir, cache_file,
+        limit, dry_run, fuzzy, interactive
+    )
 
     try:
         # Load configuration
@@ -185,144 +235,39 @@ def migrate(
         if not quiet:
             show_banner(session_config)
 
-        # Import and run the main migration pipeline
+        # Import dependencies - moved here to avoid unnecessary imports on error
         from yt2spot.input_parser import parse_input_file
         from yt2spot.matcher.decision import get_decision_summary, make_decision
         from yt2spot.matcher.scoring import score_candidates
         from yt2spot.matcher.search import search_spotify_tracks
         from yt2spot.spotify_client import SpotifyClient
 
-        # Load and validate environment variables
-        try:
-            from dotenv import load_dotenv
+        # Load environment variables - optimized import
+        _load_env_variables()
 
-            load_dotenv()
-        except ImportError:
-            # python-dotenv not installed, skip loading .env file
-            pass
-
-        # Parse input file
-        console.print(f"[cyan]📁 Parsing input file:[/cyan] {input_path}")
-        songs = parse_input_file(input_path)
-
+        # Parse and validate input
+        songs = _parse_and_validate_input(input_path, limit, quiet)
         if not songs:
-            console.print("[red]❌ No songs found in input file[/red]")
             return
 
-        # Apply limit if specified
-        if limit and limit > 0:
-            songs = songs[:limit]
-            console.print(f"[yellow]⚠️  Limited to first {limit} songs[/yellow]")
-
         # Initialize Spotify client
-        console.print("[cyan]🔐 Authenticating with Spotify...[/cyan]")
+        if not quiet:
+            console.print("[cyan]🔐 Authenticating with Spotify...[/cyan]")
         spotify_client = SpotifyClient(session_config)
 
         if not spotify_client.authenticate():
-            console.print("[red]❌ Failed to authenticate with Spotify[/red]")
+            console.print("[red] Failed to authenticate with Spotify[/red]")
             return
 
-        # Process songs
-        console.print(f"[cyan]🎵 Processing {len(songs)} songs...[/cyan]")
-        decisions = []
-        liked_count = 0
-
-        from rich.progress import (
-            BarColumn,
-            Progress,
-            SpinnerColumn,
-            TaskProgressColumn,
-            TextColumn,
+        # Process songs with optimized progress tracking
+        _process_songs_with_progress(
+            songs, spotify_client, session_config, interactive, dry_run, verbose, quiet
         )
 
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TaskProgressColumn(),
-            console=console,
-        ) as progress:
-            task = progress.add_task("Processing songs...", total=len(songs))
-
-            for _i, song in enumerate(songs, 1):
-                progress.update(task, description=f"Processing: {song.title[:30]}...")
-
-                try:
-                    # Search for candidates
-                    candidates = search_spotify_tracks(
-                        song, spotify_client, session_config
-                    )
-
-                    # Score candidates
-                    if candidates:
-                        candidates = score_candidates(song, candidates, session_config)
-
-                    # Make decision
-                    decision = make_decision(
-                        song, candidates, session_config, interactive
-                    )
-                    decisions.append(decision)
-
-                    # Like the track if decision was positive and not dry run
-                    if decision.chosen_candidate and not dry_run:
-                        if spotify_client.like_track(
-                            decision.chosen_candidate.spotify_id
-                        ):
-                            liked_count += 1
-                            if verbose:
-                                console.print(
-                                    f"[green]✓[/green] Liked: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
-                                )
-                        else:
-                            if verbose:
-                                console.print(
-                                    f"[red]✗[/red] Failed to like: {decision.chosen_candidate.title}"
-                                )
-                    elif decision.chosen_candidate and dry_run:
-                        liked_count += 1  # Count what would be liked
-                        if verbose:
-                            console.print(
-                                f"[blue]🔍[/blue] Would like: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
-                            )
-
-                    progress.advance(task)
-
-                except KeyboardInterrupt:
-                    console.print("\n[yellow]⚠️  Migration cancelled by user[/yellow]")
-                    break
-                except Exception as e:
-                    console.print(f"[red]❌ Error processing '{song.title}': {e}[/red]")
-                    continue
-
-        # Show summary
-        if not quiet:
-            summary = get_decision_summary(decisions)
-            console.print("\n[bold]📊 Migration Summary:[/bold]")
-            console.print(f"  Total songs processed: {summary['total']}")
-            console.print(
-                f"  Successfully matched: [green]{summary['auto_accept'] + summary['manual_accept']}[/green]"
-            )
-            console.print(
-                f"  Automatically accepted: [green]{summary['auto_accept']}[/green]"
-            )
-            console.print(
-                f"  Manually accepted: [green]{summary['manual_accept']}[/green]"
-            )
-            console.print(f"  Songs liked on Spotify: [cyan]{liked_count}[/cyan]")
-            console.print(f"  Skipped: [yellow]{summary['skipped']}[/yellow]")
-            console.print(
-                f"  Rejected: [red]{summary['auto_reject'] + summary['manual_reject']}[/red]"
-            )
-            console.print(f"  Success rate: [cyan]{summary['success_rate']:.1%}[/cyan]")
-
-            if dry_run:
-                console.print(
-                    "\n[blue]🔍 This was a dry run - no tracks were actually liked[/blue]"
-                )
-
+        # Show runtime summary
         if not quiet:
             runtime = time.time() - start_time
-            console.print(f"\n[green]✅ Setup completed in {runtime:.2f}s[/green]")
+            console.print(f"\n[green]✅ Migration completed in {runtime:.2f}s[/green]")
 
     except KeyboardInterrupt:
         console.print("\n[yellow]⚠️  Operation cancelled by user[/yellow]")
@@ -331,9 +276,168 @@ def migrate(
         console.print(f"\n[red]❌ Error: {e}[/red]")
         if debug:
             import traceback
-
             console.print("[red]" + traceback.format_exc() + "[/red]")
         sys.exit(1)
+
+
+def _load_env_variables() -> None:
+    """Load environment variables if dotenv is available."""
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        # python-dotenv not installed, skip loading .env file
+        pass
+
+
+def _parse_and_validate_input(input_path: Path, limit: Optional[int], quiet: bool) -> list:
+    """Parse and validate input file, applying limit if specified."""
+    from yt2spot.input_parser import parse_input_file
+    
+    if not quiet:
+        console.print(f"[cyan]📁 Parsing input file:[/cyan] {input_path}")
+    
+    songs = parse_input_file(input_path)
+    
+    if not songs:
+        console.print("[red] No songs found in input file[/red]")
+        return []
+
+    # Apply limit if specified
+    if limit and limit > 0:
+        songs = songs[:limit]
+        if not quiet:
+            console.print(f"[yellow]⚠️  Limited to first {limit} songs[/yellow]")
+
+    return songs
+
+
+def _process_songs_with_progress(
+    songs: list,
+    spotify_client,
+    session_config: SessionConfig,
+    interactive: bool,
+    dry_run: bool,
+    verbose: bool,
+    quiet: bool,
+) -> None:
+    """Process songs with optimized progress tracking and error handling."""
+    from yt2spot.matcher.decision import get_decision_summary, make_decision
+    from yt2spot.matcher.scoring import score_candidates
+    from yt2spot.matcher.search import search_spotify_tracks
+
+    if not quiet:
+        console.print(f"[cyan]🎵 Processing {len(songs)} songs...[/cyan]")
+    
+    decisions = []
+    liked_count = 0
+    error_count = 0
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        console=console,
+        disable=quiet,  # Disable progress bar in quiet mode
+    ) as progress:
+        task = progress.add_task("Processing songs...", total=len(songs))
+
+        for i, song in enumerate(songs, 1):
+            if not quiet:
+                progress.update(task, description=f"Processing: {song.title[:30]}...")
+
+            try:
+                # Process single song efficiently
+                decision = _process_single_song(
+                    song, spotify_client, session_config, interactive
+                )
+                decisions.append(decision)
+
+                # Handle liking/dry run
+                if decision.chosen_candidate:
+                    if not dry_run:
+                        if spotify_client.like_track(decision.chosen_candidate.spotify_id):
+                            liked_count += 1
+                            if verbose:
+                                console.print(
+                                    f"[green]✓[/green] Liked: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
+                                )
+                        elif verbose:
+                            console.print(
+                                f"[red]✗[/red] Failed to like: {decision.chosen_candidate.title}"
+                            )
+                    else:
+                        liked_count += 1  # Count what would be liked
+                        if verbose:
+                            console.print(
+                                f"[blue]🔍[/blue] Would like: {decision.chosen_candidate.title} by {decision.chosen_candidate.artist}"
+                            )
+
+                progress.advance(task)
+
+            except KeyboardInterrupt:
+                console.print("\n[yellow]⚠️  Migration cancelled by user[/yellow]")
+                break
+            except Exception as e:
+                error_count += 1
+                if not quiet:
+                    console.print(f"[red]❌ Error processing '{song.title}': {e}[/red]")
+                continue
+
+    # Show comprehensive summary
+    if not quiet:
+        _show_migration_summary(decisions, liked_count, error_count, dry_run)
+
+
+def _process_single_song(song, spotify_client, session_config: SessionConfig, interactive: bool):
+    """Process a single song efficiently."""
+    from yt2spot.matcher.decision import make_decision
+    from yt2spot.matcher.scoring import score_candidates
+    from yt2spot.matcher.search import search_spotify_tracks
+
+    # Search for candidates
+    candidates = search_spotify_tracks(song, spotify_client, session_config)
+
+    # Score candidates if any found
+    if candidates:
+        candidates = score_candidates(song, candidates, session_config)
+
+    # Make decision
+    return make_decision(song, candidates, session_config, interactive)
+
+
+def _show_migration_summary(decisions: list, liked_count: int, error_count: int, dry_run: bool) -> None:
+    """Show comprehensive migration summary."""
+    from yt2spot.matcher.decision import get_decision_summary
+
+    summary = get_decision_summary(decisions)
+    
+    console.print("\n[bold]📊 Migration Summary:[/bold]")
+    console.print(f"  Total songs processed: {summary['total']}")
+    console.print(
+        f"  Successfully matched: [green]{summary['auto_accept'] + summary['manual_accept']}[/green]"
+    )
+    console.print(
+        f"  Automatically accepted: [green]{summary['auto_accept']}[/green]"
+    )
+    console.print(
+        f"  Manually accepted: [green]{summary['manual_accept']}[/green]"
+    )
+    console.print(f"  Songs liked on Spotify: [cyan]{liked_count}[/cyan]")
+    console.print(f"  Skipped: [yellow]{summary['skipped']}[/yellow]")
+    console.print(
+        f"  Rejected: [red]{summary['auto_reject'] + summary['manual_reject']}[/red]"
+    )
+    console.print(f"  Success rate: [cyan]{summary['success_rate']:.1%}[/cyan]")
+    
+    if error_count > 0:
+        console.print(f"  [red]Errors encountered: {error_count}[/red]")
+
+    if dry_run:
+        console.print(
+            "\n[blue]🔍 This was a dry run - no tracks were actually liked[/blue]"
+        )
 
 
 def show_banner(config: SessionConfig) -> None:
